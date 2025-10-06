@@ -1,136 +1,128 @@
 package com.pisco.agrofood;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.credentials.*;
-import androidx.credentials.exceptions.GetCredentialException;
 
-import com.google.android.gms.auth.api.signin.*;
-import com.google.android.gms.common.api.ApiException;
-import com.google.firebase.auth.*;
-import com.google.android.libraries.identity.googleid.*;
-
-import java.util.concurrent.Executors;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class LoginActivity extends AppCompatActivity {
-    private static final String TAG = "LoginActivity";
-    private static final int RC_SIGN_IN = 100;
 
-    private FirebaseAuth mAuth;
-    private GoogleSignInClient mGoogleSignInClient;
-    private CredentialManager credentialManager;
-    private Button btnSignIn;
+    private EditText edtPhone, edtPassword;
+    private ImageView togglePassword;
+    private Button btnLogin;
+    private FirebaseFirestore db;
+    private boolean isPasswordVisible = false;
+
+    private static final String TAG = "LoginActivity";
+    private static final String PREF_NAME = "UserSession";
+    private static final String KEY_PHONE = "phone";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mAuth = FirebaseAuth.getInstance();
-        btnSignIn = findViewById(R.id.btnSignIn);
+        edtPhone = findViewById(R.id.edtPhone);
+        edtPassword = findViewById(R.id.edtPassword);
+        togglePassword = findViewById(R.id.togglePassword);
+        btnLogin = findViewById(R.id.btnLogin);
 
-        // ⚙️ Config Google Sign-In (fallback)
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
-                .requestEmail()
-                .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+        FirebaseApp.initializeApp(this);
+        db = FirebaseFirestore.getInstance();
 
-        // CredentialManager (Android 14+)
-        try {
-            credentialManager = CredentialManager.create(this);
-        } catch (Exception e) {
-            Log.w(TAG, "CredentialManager not available", e);
-        }
+        // ✅ Vérifier si l'utilisateur est déjà connecté
+        checkIfUserIsLoggedIn();
 
-        btnSignIn.setOnClickListener(v -> launchGoogleSignIn());
+        togglePassword.setOnClickListener(v -> togglePasswordVisibility());
+        btnLogin.setOnClickListener(v -> loginUser());
     }
 
-    private void launchGoogleSignIn() {
-        if (credentialManager != null) {
-            tryGoogleCredentialManager();
+    private void checkIfUserIsLoggedIn() {
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        String savedPhone = prefs.getString(KEY_PHONE, null);
+
+        if (savedPhone != null) {
+            // Utilisateur déjà connecté → redirection directe
+            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
+
+    private void togglePasswordVisibility() {
+        isPasswordVisible = !isPasswordVisible;
+        if (isPasswordVisible) {
+            edtPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            togglePassword.setImageResource(R.drawable.invisible100);
         } else {
-            startFallbackSignIn();
+            edtPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            togglePassword.setImageResource(R.drawable.visible100);
         }
+        edtPassword.setSelection(edtPassword.getText().length());
     }
 
-    // ✅ Essaye Credential Manager
-    private void tryGoogleCredentialManager() {
-        GetGoogleIdOption googleIdOption = new GetGoogleIdOption.Builder()
-                .setFilterByAuthorizedAccounts(false)
-                .setServerClientId(getString(R.string.default_web_client_id))
-                .build();
+    private void loginUser() {
+        String phone = edtPhone.getText().toString().trim();
+        String password = edtPassword.getText().toString().trim();
 
-        GetCredentialRequest request = new GetCredentialRequest.Builder()
-                .addCredentialOption(googleIdOption)
-                .build();
-
-        credentialManager.getCredentialAsync(
-                this,
-                request,
-                null,
-                Executors.newSingleThreadExecutor(),
-                new CredentialManagerCallback<GetCredentialResponse, GetCredentialException>() {
-                    @Override
-                    public void onResult(GetCredentialResponse result) {
-                        handleSignIn(result.getCredential());
-                    }
-
-                    @Override
-                    public void onError(GetCredentialException e) {
-                        Log.e(TAG, "CredentialManager failed: " + e.getMessage());
-                        runOnUiThread(() -> startFallbackSignIn());
-                    }
-                });
-    }
-
-    // 🧩 Fallback si Credential Manager échoue
-    private void startFallbackSignIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RC_SIGN_IN) {
-            try {
-                GoogleSignInAccount account = GoogleSignIn.getSignedInAccountFromIntent(data)
-                        .getResult(ApiException.class);
-                firebaseAuthWithGoogle(account.getIdToken());
-            } catch (ApiException e) {
-                Log.w(TAG, "Google sign-in failed", e);
-            }
+        if (TextUtils.isEmpty(phone)) {
+            edtPhone.setError("Numéro requis");
+            return;
         }
-    }
 
-    private void handleSignIn(Credential credential) {
-        if (credential instanceof CustomCredential &&
-                GoogleIdTokenCredential.TYPE_GOOGLE_ID_TOKEN_CREDENTIAL.equals(credential.getType())) {
-            GoogleIdTokenCredential googleCred =
-                    GoogleIdTokenCredential.createFrom(((CustomCredential) credential).getData());
-            firebaseAuthWithGoogle(googleCred.getIdToken());
-        } else {
-            Log.w(TAG, "Unexpected credential type: " + credential.getType());
+        if (TextUtils.isEmpty(password)) {
+            edtPassword.setError("Mot de passe requis");
+            return;
         }
-    }
 
-    private void firebaseAuthWithGoogle(String idToken) {
-        AuthCredential firebaseCredential = GoogleAuthProvider.getCredential(idToken, null);
-        mAuth.signInWithCredential(firebaseCredential)
-                .addOnCompleteListener(this, task -> {
+        db.collection("usersagrofoof")
+                .whereEqualTo("phone", phone)
+                .get()
+                .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        Toast.makeText(this, "Bienvenue " + user.getDisplayName(), Toast.LENGTH_SHORT).show();
+                        boolean userFound = false;
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            String storedPassword = document.getString("password");
+                            if (storedPassword != null && storedPassword.equals(password)) {
+                                userFound = true;
+                                saveSession(phone);
+                                Toast.makeText(LoginActivity.this, "Connexion réussie ✅", Toast.LENGTH_SHORT).show();
+
+                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                startActivity(intent);
+                                finish();
+                                break;
+                            }
+                        }
+
+                        if (!userFound) {
+                            Toast.makeText(LoginActivity.this, "Numéro ou mot de passe incorrect ❌", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        Toast.makeText(this, "Erreur de connexion", Toast.LENGTH_SHORT).show();
+                        Log.w(TAG, "Erreur Firestore", task.getException());
+                        Toast.makeText(LoginActivity.this, "Erreur de connexion Firestore", Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void saveSession(String phone) {
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString(KEY_PHONE, phone);
+        editor.apply();
     }
 }

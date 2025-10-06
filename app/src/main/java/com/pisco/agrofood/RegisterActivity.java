@@ -1,5 +1,6 @@
 package com.pisco.agrofood;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -107,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
         user.put("phone", phone);
         user.put("password", password);
 
-        db.collection("users")
+        db.collection("usersagrofoof")
                 .add(user)
                 .addOnSuccessListener(documentReference -> {
                     Log.d(TAG, "Utilisateur ajouté avec ID: " + documentReference.getId());
@@ -116,6 +117,9 @@ public class RegisterActivity extends AppCompatActivity {
                     edtPhone.setText("");
                     edtPassword.setText("");
                     edtConfirmPassword.setText("");
+                    Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
                 })
                 .addOnFailureListener(e -> {
                     Log.w(TAG, "Erreur lors de l'ajout", e);
