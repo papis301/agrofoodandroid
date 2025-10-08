@@ -20,8 +20,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     private Context context;
 
     public ProductAdapter(ArrayList<ProductModel> productList, Context context) {
-        this.productList = productList;
+        //this.productList = productList;
         this.context = context;
+        this.productList = (productList != null) ? productList : new ArrayList<>();
+
     }
 
     @NonNull

@@ -14,6 +14,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AgroFood">
         <activity
+            android:name=".AccueilActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".ProductListActivity"
             android:exported="false" />
         <activity
@@ -24,12 +34,8 @@
             android:exported="false" />
         <activity
             android:name=".RegisterActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="false">
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".FirebaseUIActivity"

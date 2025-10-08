@@ -6,6 +6,7 @@ public class ProductModel {
     private double price;
     private String description;
     private String images;
+    private String imageUrl;
 
     public ProductModel(int id, String name, double price, String description, String images) {
         this.id = id;
@@ -15,9 +16,21 @@ public class ProductModel {
         this.images = images;
     }
 
+    public ProductModel() {
+
+    }
+
     public int getId() { return id; }
     public String getName() { return name; }
     public double getPrice() { return price; }
     public String getDescription() { return description; }
     public String getImages() { return images; }
+
+
+    public void setName(String name) { this.name = name; }
+
+    public void setPrice(double price) { this.price = price; }
+
+    public String getImageUrl() { return imageUrl; }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 }

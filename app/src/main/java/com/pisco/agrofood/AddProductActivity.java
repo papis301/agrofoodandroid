@@ -158,6 +158,9 @@ public class AddProductActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     runOnUiThread(() ->
                             Toast.makeText(AddProductActivity.this, "Produit enregistré avec succès ✅", Toast.LENGTH_SHORT).show());
+                    Intent intent = new Intent(AddProductActivity.this, ProductListActivity.class);
+                    startActivity(intent);
+                    finish();
                 } else {
                     runOnUiThread(() ->
                             Toast.makeText(AddProductActivity.this, "Erreur du serveur ⚠️", Toast.LENGTH_SHORT).show());
