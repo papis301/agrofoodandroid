@@ -1,5 +1,6 @@
 package com.pisco.agrofood;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText edtPhone, edtPassword;
     private ImageView togglePassword;
-    private Button btnLogin;
+    private Button btnLogin, btnsinscrire;
     private FirebaseFirestore db;
     private boolean isPasswordVisible = false;
 
@@ -31,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     private static final String PREF_NAME = "UserSession";
     private static final String KEY_PHONE = "phone";
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         edtPassword = findViewById(R.id.edtPassword);
         togglePassword = findViewById(R.id.togglePassword);
         btnLogin = findViewById(R.id.btnLogin);
+        btnsinscrire = findViewById(R.id.btnsinscrire);
 
         FirebaseApp.initializeApp(this);
         db = FirebaseFirestore.getInstance();
@@ -49,6 +52,11 @@ public class LoginActivity extends AppCompatActivity {
 
         togglePassword.setOnClickListener(v -> togglePasswordVisibility());
         btnLogin.setOnClickListener(v -> loginUser());
+        btnsinscrire.setOnClickListener(v -> {
+            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void checkIfUserIsLoggedIn() {
@@ -89,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        db.collection("usersagrofoof")
+        db.collection("usersagrofood")
                 .whereEqualTo("phone", phone)
                 .get()
                 .addOnCompleteListener(task -> {

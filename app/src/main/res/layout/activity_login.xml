@@ -66,6 +66,15 @@
             android:backgroundTint="#1565C0"
             android:textColor="#fff"
             android:padding="12dp" />
+        <Button
+            android:id="@+id/btnsinscrire"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="S'inscrire"
+            android:textAllCaps="false"
+            android:backgroundTint="#1565C0"
+            android:textColor="#fff"
+            android:padding="12dp" />
 
     </LinearLayout>
 </ScrollView>

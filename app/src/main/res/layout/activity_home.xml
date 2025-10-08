@@ -22,6 +22,25 @@
             android:layout_marginBottom="30dp"/>
 
         <Button
+            android:id="@+id/btnaddprod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ajouter un produit"
+            android:textAllCaps="false"
+            android:backgroundTint="#1565C0"
+            android:textColor="#fff"
+            android:padding="10dp"/>
+        <Button
+            android:id="@+id/btnproduits"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Mes Produits"
+            android:textAllCaps="false"
+            android:backgroundTint="#1565C0"
+            android:textColor="#fff"
+            android:padding="10dp"/>
+
+        <Button
             android:id="@+id/btnLogout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
