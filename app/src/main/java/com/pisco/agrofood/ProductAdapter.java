@@ -11,6 +11,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -20,10 +24,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     private Context context;
 
     public ProductAdapter(ArrayList<ProductModel> productList, Context context) {
-        //this.productList = productList;
         this.context = context;
         this.productList = (productList != null) ? productList : new ArrayList<>();
-
     }
 
     @NonNull
@@ -41,12 +43,47 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         holder.txtPrice.setText(product.getPrice() + " FCFA");
         holder.txtDescription.setText(product.getDescription());
 
-        // Charger la première image
-        String[] imagePaths = product.getImages().split(",");
-        if (imagePaths.length > 0) {
-            Glide.with(context)
-                    .load("https://agrofood.deydem.pro/" + imagePaths[0].trim())
-                    .into(holder.imageView);
+        String imagesRaw = product.getImages();
+        String firstImageUrl = null;
+
+        if (imagesRaw != null && !imagesRaw.isEmpty()) {
+            try {
+                // 🔹 Si c’est un tableau JSON (["uploads/img.jpg"])
+                if (imagesRaw.startsWith("[")) {
+                    JSONArray jsonArray = new JSONArray(imagesRaw);
+                    if (jsonArray.length() > 0) {
+                        firstImageUrl = jsonArray.getString(0);
+                    }
+                } else {
+                    // 🔹 Si c’est juste une chaîne simple séparée par des virgules
+                    String[] paths = imagesRaw.split(",");
+                    firstImageUrl = paths[0];
+                }
+
+                if (firstImageUrl != null) {
+                    // Nettoyage de l’URL
+                    firstImageUrl = firstImageUrl
+                            .replace("[", "")
+                            .replace("]", "")
+                            .replace("\"", "")
+                            .replace("\\", "")
+                            .trim();
+
+                    // Ajouter le domaine complet si nécessaire
+                    if (!firstImageUrl.startsWith("http")) {
+                        firstImageUrl = "https://agrofood.deydem.pro/" + firstImageUrl;
+                    }
+
+                    // Chargement de l’image avec Glide
+                    Glide.with(context)
+                            .load(firstImageUrl)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)
+                            .into(holder.imageView);
+                }
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
     }
 
