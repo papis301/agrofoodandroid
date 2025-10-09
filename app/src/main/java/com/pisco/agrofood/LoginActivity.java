@@ -5,15 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.FirebaseApp;
@@ -23,14 +20,13 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 public class LoginActivity extends AppCompatActivity {
 
     private EditText edtPhone, edtPassword;
-    private ImageView togglePassword;
-    private Button btnLogin, btnsinscrire;
+    private Button btnLogin, btnRegister;
     private FirebaseFirestore db;
-    private boolean isPasswordVisible = false;
 
-    private static final String TAG = "LoginActivity";
     private static final String PREF_NAME = "UserSession";
     private static final String KEY_PHONE = "phone";
+    private static final String KEY_FIREBASE_ID = "firebase_id";
+    private static final String TAG = "LoginActivity";
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -40,50 +36,21 @@ public class LoginActivity extends AppCompatActivity {
 
         edtPhone = findViewById(R.id.edtPhone);
         edtPassword = findViewById(R.id.edtPassword);
-        togglePassword = findViewById(R.id.togglePassword);
         btnLogin = findViewById(R.id.btnLogin);
-        btnsinscrire = findViewById(R.id.btnsinscrire);
+        btnRegister = findViewById(R.id.btnsinscrire);
 
         FirebaseApp.initializeApp(this);
         db = FirebaseFirestore.getInstance();
 
-        // ✅ Vérifier si l'utilisateur est déjà connecté
-        checkIfUserIsLoggedIn();
+        btnLogin.setOnClickListener(v -> attemptLogin());
 
-        togglePassword.setOnClickListener(v -> togglePasswordVisibility());
-        btnLogin.setOnClickListener(v -> loginUser());
-        btnsinscrire.setOnClickListener(v -> {
+        btnRegister.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
             startActivity(intent);
-            finish();
         });
     }
 
-    private void checkIfUserIsLoggedIn() {
-        SharedPreferences prefs = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        String savedPhone = prefs.getString(KEY_PHONE, null);
-
-        if (savedPhone != null) {
-            // Utilisateur déjà connecté → redirection directe
-            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-            startActivity(intent);
-            finish();
-        }
-    }
-
-    private void togglePasswordVisibility() {
-        isPasswordVisible = !isPasswordVisible;
-        if (isPasswordVisible) {
-            edtPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-            togglePassword.setImageResource(R.drawable.invisible100);
-        } else {
-            edtPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-            togglePassword.setImageResource(R.drawable.visible100);
-        }
-        edtPassword.setSelection(edtPassword.getText().length());
-    }
-
-    private void loginUser() {
+    private void attemptLogin() {
         String phone = edtPhone.getText().toString().trim();
         String password = edtPassword.getText().toString().trim();
 
@@ -97,40 +64,44 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
+        // 🔍 Vérification dans Firestore
         db.collection("usersagrofood")
                 .whereEqualTo("phone", phone)
+                .whereEqualTo("password", password)
                 .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        boolean userFound = false;
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            String storedPassword = document.getString("password");
-                            if (storedPassword != null && storedPassword.equals(password)) {
-                                userFound = true;
-                                saveSession(phone);
-                                Toast.makeText(LoginActivity.this, "Connexion réussie ✅", Toast.LENGTH_SHORT).show();
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        // ✅ Connexion réussie
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            String firebaseId = document.getId();
+                            String phoneNumber = document.getString("phone");
 
-                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                                startActivity(intent);
-                                finish();
-                                break;
-                            }
-                        }
+                            // 🔹 Sauvegarde dans SharedPreferences
+                            saveUserSession(phoneNumber, firebaseId);
 
-                        if (!userFound) {
-                            Toast.makeText(LoginActivity.this, "Numéro ou mot de passe incorrect ❌", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, "Connexion réussie ✅", Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, "Utilisateur connecté : " + firebaseId);
+
+                            Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                            startActivity(intent);
+                            finish();
+                            break;
                         }
                     } else {
-                        Log.w(TAG, "Erreur Firestore", task.getException());
-                        Toast.makeText(LoginActivity.this, "Erreur de connexion Firestore", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Identifiants incorrects ❌", Toast.LENGTH_SHORT).show();
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Erreur de connexion : " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Erreur Firestore", e);
                 });
     }
 
-    private void saveSession(String phone) {
+    private void saveUserSession(String phone, String firebaseId) {
         SharedPreferences prefs = getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString(KEY_PHONE, phone);
+        editor.putString(KEY_FIREBASE_ID, firebaseId);
         editor.apply();
     }
 }

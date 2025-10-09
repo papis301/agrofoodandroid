@@ -2,7 +2,9 @@ package com.pisco.agrofood;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +18,8 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -39,13 +43,23 @@ public class AddProductActivity extends AppCompatActivity {
     private Button btnChoose, btnUpload;
     private List<Uri> imageUris = new ArrayList<>();
 
+    private String firebaseId;
+    private FirebaseFirestore db;
+
     private static final String UPLOAD_URL = "https://agrofood.deydem.pro/upload_product.php"; // 🔵 Remplace par ton URL PHP
+
+    SharedPreferences prefs;
+    String phone ;
 
     @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product);
+
+         prefs = getSharedPreferences("UserSession", Context.MODE_PRIVATE);
+        phone = prefs.getString("phone", null);
+        firebaseId = prefs.getString("firebase_id", null);
 
         imageContainer = findViewById(R.id.imageContainer);
         edtName = findViewById(R.id.edtName);
@@ -55,6 +69,17 @@ public class AddProductActivity extends AppCompatActivity {
 
         btnChoose.setOnClickListener(v -> chooseImages());
         btnUpload.setOnClickListener(v -> uploadProduct());
+
+        db = FirebaseFirestore.getInstance();
+
+        // 🔹 Récupère le téléphone depuis la session (stocké après connexion)
+
+        if (phone == null) {
+            Toast.makeText(this, "Session expirée, veuillez vous reconnecter", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
     }
 
     private void chooseImages() {
@@ -114,6 +139,8 @@ public class AddProductActivity extends AppCompatActivity {
 
         multipartBuilder.addFormDataPart("name", name);
         multipartBuilder.addFormDataPart("price", price);
+        multipartBuilder.addFormDataPart("firebase_id", firebaseId);
+        multipartBuilder.addFormDataPart("telephone", phone);
 
         try {
             for (int i = 0; i < imageUris.size(); i++) {
@@ -155,17 +182,25 @@ public class AddProductActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 progressDialog.dismiss();
-                if (response.isSuccessful()) {
-                    runOnUiThread(() ->
-                            Toast.makeText(AddProductActivity.this, "Produit enregistré avec succès ✅", Toast.LENGTH_SHORT).show());
-                    Intent intent = new Intent(AddProductActivity.this, ProductListActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    runOnUiThread(() ->
-                            Toast.makeText(AddProductActivity.this, "Erreur du serveur ⚠️", Toast.LENGTH_SHORT).show());
-                }
+
+                String responseBody = response.body() != null ? response.body().string() : "null";
+                Log.d("API_RESPONSE", "Réponse complète : " + responseBody);
+
+                runOnUiThread(() -> {
+                    if (response.isSuccessful()) {
+                        if (responseBody.contains("\"success\":true")) {
+                            Toast.makeText(AddProductActivity.this, "Produit enregistré avec succès ✅", Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(AddProductActivity.this, AccueilActivity.class));
+                            finish();
+                        } else {
+                            Toast.makeText(AddProductActivity.this, "Réponse inattendue du serveur ⚠️", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(AddProductActivity.this, "Erreur du serveur ⚠️", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
+
         });
     }
 }
