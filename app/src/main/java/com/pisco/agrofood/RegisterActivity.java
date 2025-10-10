@@ -138,6 +138,8 @@ public class RegisterActivity extends AppCompatActivity {
         Map<String, Object> user = new HashMap<>();
         user.put("phone", phone);
         user.put("password", password);
+        user.put("solde", 0);
+        user.put("statut", "activé");
 
         db.collection("usersagrofood")
                 .add(user)

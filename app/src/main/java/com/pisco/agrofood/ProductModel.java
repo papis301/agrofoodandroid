@@ -20,6 +20,16 @@ public class ProductModel {
 
     }
 
+    public ProductModel(int id, String name, String price, String description, String images) {
+    }
+
+    public ProductModel(int id, String name, double price, String images) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.images = images;
+    }
+
     public int getId() { return id; }
     public String getName() { return name; }
     public double getPrice() { return price; }

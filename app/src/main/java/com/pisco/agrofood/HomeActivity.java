@@ -54,13 +54,11 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         btnproduits.setOnClickListener(v -> {
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.clear();
-            editor.apply();
 
-            Intent intent = new Intent(HomeActivity.this, ProductListActivity.class);
+
+            Intent intent = new Intent(HomeActivity.this, MesProduitsActivity.class);
             startActivity(intent);
-            finish();
+
         });
 
         btnaddprod.setOnClickListener(v -> {
