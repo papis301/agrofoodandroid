@@ -1,4 +1,67 @@
 <resources>
     <string name="app_name">Agro Food</string>
     <string name="default_web_client_id">471440425690-sda9eudc01t54d00rtbear596297o7sf.apps.googleusercontent.com</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    //Headings
+    <string name="heading_one">Safety and future of my crop</string>
+    <string name="heading_two">Crops we recommend</string>
+    <string name="heading_three">Soil suitability for cultivation</string>
+    <string name="heading_fourth">Product future</string>
+    <string name="heading_fifth">Soil classification</string>
+
+    //Description
+    <string name="desc_one">Enter a picture of your crop to help you identify the type of disease, suggest a treatment for it, and suggest common diseases of your crop and treat them.</string>
+    <string name="desc_two">We suggest some crops that suit you by identifying your location, soil type, and air temperature around you</string>
+    <string name="desc_three">Enter the analysis image of your soil to help you identify its type and whether it is suitable for cultivation or not</string>
+    <string name="desc_fourth">We display information about your cultivated crop, common diseases and ways to treat them</string>
+    <string name="desc_fifth">Insert a picture of your soil to help you identify its type and suggest suitable crops</string>
+    <string name="sign_in">Connexion</string>
+    <string name="sign_up">Creer un compte</string>
+    <string name="or">OR</string>
+    <string name="back">Back</string>
+    <string name="next">Next</string>
+    <string name="skip">Skip</string>
+    <string name="password">Mot de passe</string>
+    <string name="phone">Telephone</string>
+    <string name="email">Email</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="active" translatable="false">Active</string>
+    <string name="normal" translatable="false">Normal</string>
+    <string name="error" translatable="false">Error</string>
+    <string name="don_t_have_an_account_sign_up">Don\'t have an account? Sign up</string>
+    <string name="welcome">Bienvenue!</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="profile">Profile</string>
+    <string name="chat">Chat</string>
+    <string name="recommending_crops">We suggest some crops that suit you by identifying your location, soil type, and air temperature around you</string>
+    <string name="crops_we_recommend">Crops we Recommend</string>
+    <string name="soil_fertilizer">Soil fertilizer</string>
+    <string name="soil_fertilizer_content">We detect your crop and suggest appropriate fertilizers by identifying your location, soil type, air temperature around you, and the cultivated crop.</string>
+    <string name="my_crop_safety">Plant Disease</string>
+    <string name="my_crop_future">Crop future</string>
+    <string name="Soil_suitability_for_cultivation">Soil suitability for cultivation</string>
+    <string name="crop_safety_content">Upload a picture of your plant to help you identify the type of disease</string>
+    <string name="crop_future_content">We display information about your cultivated crop, common diseases and methods of treatment</string>
+    <string name="soil_suitability_content">We help you judge whether the soil is suitable for cultivation or not by analyzing it</string>
+    <string name="soil_classification">Soil classification</string>
+    <string name="nearest_plantation">Nearest Plantation</string>
+    <string name="purchase_of_fertilizers_and_treatment">Purchase of fertilizers and treatment</string>
+    <string name="nearest_laboratory">Nearest Laboratory</string>
+    <string name="consultation_request">Consultation request</string>
+    <string name="soil_classification_content">Upload a picture of your soil to help you identify its type and suggest suitable crops</string>
+    <string name="nearest_planting">We suggest the nearest nursery to your location for easy purchase of your own plant</string>
+    <string name="nearest_laboratory_content">We suggest the nearest analysis laboratory to your location in order to conduct analyzes of your soil</string>
+    <string name="buy_medicine_content">We suggest the nearest place to buy fertilizer and treatment for your crop</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="have_an_account_login">Have an account ? Login</string>
+    <string name="username">Username</string>
+    <string name="password_recovery">Password Recovery</string>
+    <string-array name="gender_array">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+
 </resources>

@@ -9,16 +9,18 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
+        maven(url = "https://jitpack.io") // 👈 ajouté ici (utile pour certains plugins aussi)
     }
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
         mavenCentral()
+        maven(url = "https://jitpack.io") // 👈 syntaxe Kotlin DSL correcte
     }
 }
 
 rootProject.name = "Agro Food"
 include(":app")
- 

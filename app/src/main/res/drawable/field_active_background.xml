@@ -1,0 +1,14 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+
+    <!-- Couleur de fond (par ex. vert clair quand actif) -->
+    <solid android:color="#D1E7DD" />
+
+    <!-- Coins arrondis -->
+    <corners android:radius="8dp" />
+
+    <!-- Bordure -->
+    <stroke
+        android:width="2dp"
+        android:color="#198754" /> <!-- vert principal -->
+</shape>
