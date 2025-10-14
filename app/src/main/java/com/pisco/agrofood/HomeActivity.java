@@ -27,7 +27,7 @@ public class HomeActivity extends AppCompatActivity {
 
         if (phoneNumber == null) {
             Toast.makeText(this, "Session expirée, veuillez vous reconnecter", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivity(new Intent(this, LoginTemplate.class));
             finish();
             return;
         }
@@ -48,7 +48,7 @@ public class HomeActivity extends AppCompatActivity {
             editor.clear();
             editor.apply();
 
-            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+            Intent intent = new Intent(HomeActivity.this, LoginTemplate.class);
             startActivity(intent);
             finish();
         });

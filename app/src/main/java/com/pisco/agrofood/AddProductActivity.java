@@ -76,7 +76,7 @@ public class AddProductActivity extends AppCompatActivity {
 
         if (phone == null) {
             Toast.makeText(this, "Session expirée, veuillez vous reconnecter", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivity(new Intent(this, LoginTemplate.class));
             finish();
             return;
         }

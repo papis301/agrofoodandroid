@@ -1,6 +1,7 @@
 package com.pisco.agrofood;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
@@ -22,12 +23,13 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterTemplate extends AppCompatActivity {
 
     private EditText edtPhone, edtPassword, edtConfirmPassword;
     private ImageView togglePassword, toggleConfirmPassword;
     private Button btnRegister, btnlogin;
     private FirebaseFirestore db;
+    private ProgressDialog progressDialog;
 
     private boolean isPasswordVisible = false;
     private boolean isConfirmPasswordVisible = false;
@@ -38,26 +40,31 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_register_template);
 
         edtPhone = findViewById(R.id.edtPhone);
         edtPassword = findViewById(R.id.edtPassword);
         edtConfirmPassword = findViewById(R.id.edtConfirmPassword);
-        togglePassword = findViewById(R.id.togglePassword);
-        toggleConfirmPassword = findViewById(R.id.toggleConfirmPassword);
+//        togglePassword = findViewById(R.id.togglePassword);
+//        toggleConfirmPassword = findViewById(R.id.toggleConfirmPassword);
         btnRegister = findViewById(R.id.btnRegister);
         btnlogin = findViewById(R.id.btnlogin);
+
+        // 🔹 Initialisation du ProgressDialog
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Inscription en cours...");
+        progressDialog.setCancelable(false);
 
         FirebaseApp.initializeApp(this);
         db = FirebaseFirestore.getInstance();
 
-        togglePassword.setOnClickListener(v -> togglePasswordVisibility(edtPassword, true));
-        toggleConfirmPassword.setOnClickListener(v -> togglePasswordVisibility(edtConfirmPassword, false));
+//        togglePassword.setOnClickListener(v -> togglePasswordVisibility(edtPassword, true));
+//        toggleConfirmPassword.setOnClickListener(v -> togglePasswordVisibility(edtConfirmPassword, false));
 
         btnRegister.setOnClickListener(v -> checkIfUserExists());
 
         btnlogin.setOnClickListener(v -> {
-            Intent intent = new Intent(RegisterActivity.this, LoginTemplate.class);
+            Intent intent = new Intent(RegisterTemplate.this, LoginTemplate.class);
             startActivity(intent);
             finish();
         });
@@ -112,11 +119,16 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        // 🔹 Afficher le message de chargement
+        progressDialog.setMessage("Vérification du numéro...");
+        progressDialog.show();
         // 🔍 Vérifier si le téléphone existe déjà
         db.collection("usersagrofood")
                 .whereEqualTo("phone", phone)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
+                    progressDialog.dismiss();
+
                     if (!queryDocumentSnapshots.isEmpty()) {
                         // 🔴 Numéro déjà enregistré
                         Toast.makeText(this, "Ce numéro existe déjà ❌", Toast.LENGTH_SHORT).show();
@@ -126,6 +138,8 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                 })
                 .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
+
                     Toast.makeText(this, "Erreur lors de la vérification: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "Erreur Firestore", e);
                 });
@@ -135,6 +149,8 @@ public class RegisterActivity extends AppCompatActivity {
      * Enregistre un nouvel utilisateur dans Firestore
      */
     private void registerNewUser(String phone, String password) {
+        progressDialog.setMessage("Création du compte...");
+        progressDialog.show();
         Map<String, Object> user = new HashMap<>();
         user.put("phone", phone);
         user.put("password", password);
@@ -144,6 +160,7 @@ public class RegisterActivity extends AppCompatActivity {
         db.collection("usersagrofood")
                 .add(user)
                 .addOnSuccessListener(documentReference -> {
+                    progressDialog.dismiss();
                     Log.d(TAG, "Utilisateur ajouté avec ID: " + documentReference.getId());
                     Toast.makeText(this, "Inscription réussie ✅", Toast.LENGTH_SHORT).show();
 
@@ -151,11 +168,12 @@ public class RegisterActivity extends AppCompatActivity {
                     edtPassword.setText("");
                     edtConfirmPassword.setText("");
 
-                    Intent intent = new Intent(RegisterActivity.this, LoginTemplate.class);
+                    Intent intent = new Intent(RegisterTemplate.this, LoginTemplate.class);
                     startActivity(intent);
                     finish();
                 })
                 .addOnFailureListener(e -> {
+                    progressDialog.dismiss();
                     Log.w(TAG, "Erreur lors de l'ajout", e);
                     Toast.makeText(this, "Erreur: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
