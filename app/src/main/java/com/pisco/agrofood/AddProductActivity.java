@@ -190,7 +190,7 @@ public class AddProductActivity extends AppCompatActivity {
                     if (response.isSuccessful()) {
                         if (responseBody.contains("\"success\":true")) {
                             Toast.makeText(AddProductActivity.this, "Produit enregistré avec succès ✅", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(AddProductActivity.this, AccueilActivity.class));
+                            startActivity(new Intent(AddProductActivity.this, HomeTemplate.class));
                             finish();
                         } else {
                             Toast.makeText(AddProductActivity.this, "Réponse inattendue du serveur ⚠️", Toast.LENGTH_SHORT).show();
