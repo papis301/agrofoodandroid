@@ -12,7 +12,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="true"
         android:theme="@style/Theme.AgroFood">
+        <activity
+            android:name=".ProductDetailActivity"
+            android:exported="false" />
         <activity
             android:name=".HomeTemplate"
             android:exported="true">
@@ -27,13 +31,7 @@
             android:exported="false" />
         <activity
             android:name=".LoginTemplate"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".MesProduitsActivity"
             android:exported="false" />

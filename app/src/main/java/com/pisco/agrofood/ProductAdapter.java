@@ -1,6 +1,7 @@
 package com.pisco.agrofood;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
         holder.txtPrice.setText(product.getPrice() + " FCFA");
         holder.txtDescription.setText(product.getDescription());
 
+
+
         String imagesRaw = product.getImages();
         String firstImageUrl = null;
 
@@ -79,6 +82,16 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
                             .load(firstImageUrl)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(holder.imageView);
+
+                    String finalFirstImageUrl = firstImageUrl;
+                    holder.itemView.setOnClickListener(v -> {
+                        Intent intent = new Intent(context, ProductDetailActivity.class);
+                        intent.putExtra("name", product.getName());
+                        intent.putExtra("price", product.getPrice());
+                        intent.putExtra("telephone", product.getTelephone());
+                        intent.putExtra("image", finalFirstImageUrl);
+                        context.startActivity(intent);
+                    });
                 }
 
             } catch (JSONException e) {

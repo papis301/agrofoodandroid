@@ -12,7 +12,7 @@
     <ImageView
         android:id="@+id/top_bar"
         android:layout_width="0dp"
-        android:layout_height="150dp"
+        android:layout_height="100dp"
         android:scaleType="fitXY"
         android:src="@drawable/path_1903"
         app:layout_constraintTop_toTopOf="parent"
@@ -81,7 +81,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:visibility="gone">
 
 
 
@@ -139,7 +140,7 @@
         android:id="@+id/bottomNavigation"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="?android:attr/windowBackground"
+        android:background="#17a267"
         app:menu="@menu/bottom_nav_menu"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

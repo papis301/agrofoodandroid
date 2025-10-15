@@ -83,8 +83,8 @@ public class ProductListActivity extends AppCompatActivity {
                             ProductModel product = new ProductModel(
                                     obj.getInt("id"),
                                     obj.getString("name"),
+                                    obj.getString("telephone"),
                                     obj.getDouble("price"),
-                                    obj.optString("description", ""),
                                     obj.optString("images", "")
                             );
                             productList.add(product);

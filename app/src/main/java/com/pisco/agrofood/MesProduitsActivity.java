@@ -70,6 +70,7 @@ public class MesProduitsActivity extends AppCompatActivity {
                                 productList.add(new ProductModel(
                                         productObj.getInt("id"),
                                         productObj.getString("name"),
+                                        productObj.getString("telephone"),
                                         productObj.getDouble("price"),
                                         productObj.getString("images")
                                 ));
