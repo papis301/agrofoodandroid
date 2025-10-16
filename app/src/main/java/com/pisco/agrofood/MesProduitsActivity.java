@@ -34,7 +34,7 @@ public class MesProduitsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mes_produits);
 
-        recyclerView = findViewById(R.id.recyclerViewProducts);
+        recyclerView = findViewById(R.id.recyclerViewMesProducts);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         productList = new ArrayList<>();
@@ -48,6 +48,7 @@ public class MesProduitsActivity extends AppCompatActivity {
 
     private void loadUserProducts() {
         String firebaseId = sharedPreferences.getString("firebase_id", null);
+        //Toast.makeText(this, ""+firebaseId, Toast.LENGTH_SHORT).show();
         if (firebaseId == null) {
             Toast.makeText(this, "Utilisateur non connecté", Toast.LENGTH_SHORT).show();
             finish();
