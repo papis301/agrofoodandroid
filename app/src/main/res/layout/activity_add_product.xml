@@ -1,50 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="#F9F9F9">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="20dp"
         android:gravity="center_horizontal">
 
-        <EditText
-            android:id="@+id/edtName"
+        <!-- Titre -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ajouter un produit"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#2E7D32"
+            android:fontFamily="@font/roboto_bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Nom du produit -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Nom du produit"
-            android:inputType="text" />
+            app:boxBackgroundMode="outline"
+            app:boxStrokeColor="#4CAF50"
+            app:startIconDrawable="@android:drawable/ic_menu_edit">
 
-        <EditText
-            android:id="@+id/edtPrice"
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:textColor="#000" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Prix -->
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Prix"
-            android:inputType="numberDecimal"
-            android:layout_marginTop="8dp" />
+            android:hint="Prix (FCFA)"
+            app:boxBackgroundMode="outline"
+            app:boxStrokeColor="#4CAF50"
+            app:startIconDrawable="@android:drawable/ic_menu_info_details"
+            android:layout_marginTop="12dp">
 
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="numberDecimal"
+                android:textColor="#000" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Téléphone -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Téléphone"
+            app:boxBackgroundMode="outline"
+            app:boxStrokeColor="#4CAF50"
+            app:startIconDrawable="@android:drawable/ic_menu_call"
+            android:layout_marginTop="12dp"
+            android:visibility="gone">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edtTelephone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone"
+                android:textColor="#000" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Bouton pour choisir les images -->
         <Button
             android:id="@+id/btnChoose"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Choisir des images"
-            android:layout_marginTop="10dp" />
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#4CAF50"
+            android:fontFamily="@font/roboto_medium"
+            android:layout_marginTop="20dp"
+            android:paddingVertical="10dp" />
 
+        <!-- Zone d’affichage des images -->
         <LinearLayout
             android:id="@+id/imageContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            android:gravity="center" />
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:background="#E8F5E9"
+            android:padding="8dp"
+            android:clipToPadding="false" />
 
+        <!-- Bouton Enregistrer -->
         <Button
             android:id="@+id/btnUpload"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Enregistrer le produit"
-            android:layout_marginTop="16dp" />
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:backgroundTint="#2E7D32"
+            android:fontFamily="@font/roboto_medium"
+            android:layout_marginTop="24dp"
+            android:paddingVertical="12dp" />
     </LinearLayout>
 </ScrollView>
