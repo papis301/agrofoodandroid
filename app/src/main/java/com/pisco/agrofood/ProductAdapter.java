@@ -40,9 +40,11 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ProductModel product = productList.get(position);
 
+
         holder.txtName.setText(product.getName());
         holder.txtPrice.setText(product.getPrice() + " FCFA");
         holder.txtDescription.setText(product.getDescription());
+        holder.textTelephone.setText(product.getTelephone());
 
 
 
@@ -111,12 +113,13 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView txtName, txtPrice, txtDescription;
+        TextView txtName, txtPrice, txtDescription, textTelephone;
         ImageView imageView;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             txtName = itemView.findViewById(R.id.txtName);
+            textTelephone = itemView.findViewById(R.id.textTelephone);
             txtPrice = itemView.findViewById(R.id.txtPrice);
             txtDescription = itemView.findViewById(R.id.txtDescription);
             imageView = itemView.findViewById(R.id.imageViewProduct);

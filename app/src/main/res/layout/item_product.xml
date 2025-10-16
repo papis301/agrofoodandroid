@@ -63,6 +63,19 @@
                 android:ellipsize="end"
                 android:layout_marginTop="4dp" />
 
+            <!-- ✅ Téléphone -->
+            <TextView
+                android:id="@+id/textTelephone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Téléphone : 77 000 00 00"
+                android:textColor="#388E3C"
+                android:textStyle="italic"
+                android:textSize="16sp"
+                android:drawablePadding="8dp"
+                android:layout_marginBottom="24dp"
+                android:visibility="gone"/>
+
         </LinearLayout>
     </LinearLayout>
 

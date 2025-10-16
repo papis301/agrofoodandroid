@@ -23,6 +23,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         imageProduct = findViewById(R.id.imageProduct);
         textName = findViewById(R.id.textName);
         textPrice = findViewById(R.id.textPrice);
+        textTelephone = findViewById(R.id.textTelephone);
         textDescription = findViewById(R.id.textDescription);
         btnBack = findViewById(R.id.btnBack);
 
@@ -30,10 +31,12 @@ public class ProductDetailActivity extends AppCompatActivity {
         String name = getIntent().getStringExtra("name");
         double price = getIntent().getDoubleExtra("price", 0.0);
         String description = getIntent().getStringExtra("description");
+        String telephone = getIntent().getStringExtra("telephone");
         String imageUrl = getIntent().getStringExtra("image");
 
         // ✅ Affichage
         textName.setText(name);
+        textTelephone.setText("Telephone : "+telephone);
         textPrice.setText(String.format("%.2f FCFA", price));
         textDescription.setText(description);
 
