@@ -67,7 +67,7 @@ public class AccueilActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.menu_home) {
                     // Reste sur la même page
                     return true;
-                } else if (item.getItemId() == R.id.menu_add) {
+                } else if (item.getItemId() == R.id.vendre) {
                     startActivity(new Intent(AccueilActivity.this, HomeActivity.class));
                     return true;
                 }

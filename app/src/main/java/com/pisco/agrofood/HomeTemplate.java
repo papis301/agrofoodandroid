@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -40,6 +41,7 @@ public class HomeTemplate extends BaseActivity {
     private ProgressBar progressBar;
     private ProductAdapter adapter;
     private EditText editSearch;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private ArrayList<ProductModel> productList;
     private static final String PRODUCTS_URL = "https://agrofood.deydem.pro/get_products.php";
 
@@ -49,6 +51,7 @@ public class HomeTemplate extends BaseActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home_template);
 
+         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
          editSearch = findViewById(R.id.editSearch);
 
         // ✅ Initialisation des vues
@@ -68,6 +71,14 @@ public class HomeTemplate extends BaseActivity {
         if(checkInternetConnection()){
             fetchProducts();
         }
+
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            // Recharge les produits depuis Firestore ou ton API
+            fetchProducts();
+
+            // Quand c’est fini :
+            swipeRefreshLayout.setRefreshing(false);
+        });
 
         // 🔍 Recherche en temps réel
         editSearch.addTextChangedListener(new TextWatcher() {
@@ -92,7 +103,7 @@ public class HomeTemplate extends BaseActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (item.getItemId() == R.id.menu_home) {
                     return true;
-                } else if (item.getItemId() == R.id.menu_add) {
+                } else if (item.getItemId() == R.id.vendre) {
                     startActivity(new Intent(HomeTemplate.this, HomeActivity.class));
                     return true;
                 }
