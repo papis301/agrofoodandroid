@@ -40,61 +40,63 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ProductModel product = productList.get(position);
 
-
         holder.txtName.setText(product.getName());
         holder.txtPrice.setText(product.getPrice() + " FCFA");
         holder.txtDescription.setText(product.getDescription());
         holder.textTelephone.setText(product.getTelephone());
 
-
-
         String imagesRaw = product.getImages();
+        ArrayList<String> imageUrls = new ArrayList<>();
         String firstImageUrl = null;
 
         if (imagesRaw != null && !imagesRaw.isEmpty()) {
             try {
-                // 🔹 Si c’est un tableau JSON (["uploads/img.jpg"])
+                // 🔹 Si c’est un tableau JSON (["uploads/img.jpg", "uploads/img2.jpg"])
                 if (imagesRaw.startsWith("[")) {
                     JSONArray jsonArray = new JSONArray(imagesRaw);
-                    if (jsonArray.length() > 0) {
-                        firstImageUrl = jsonArray.getString(0);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        String url = jsonArray.getString(i)
+                                .replace("[", "")
+                                .replace("]", "")
+                                .replace("\"", "")
+                                .replace("\\", "")
+                                .trim();
+                        if (!url.startsWith("http")) {
+                            url = "https://agrofood.deydem.pro/" + url;
+                        }
+                        imageUrls.add(url);
                     }
                 } else {
-                    // 🔹 Si c’est juste une chaîne simple séparée par des virgules
+                    // 🔹 Si c’est une chaîne simple séparée par des virgules
                     String[] paths = imagesRaw.split(",");
-                    firstImageUrl = paths[0];
+                    for (String path : paths) {
+                        path = path.replace("\"", "").replace("\\", "").trim();
+                        if (!path.startsWith("http")) {
+                            path = "https://agrofood.deydem.pro/" + path;
+                        }
+                        imageUrls.add(path);
+                    }
                 }
 
-                if (firstImageUrl != null) {
-                    // Nettoyage de l’URL
-                    firstImageUrl = firstImageUrl
-                            .replace("[", "")
-                            .replace("]", "")
-                            .replace("\"", "")
-                            .replace("\\", "")
-                            .trim();
-
-                    // Ajouter le domaine complet si nécessaire
-                    if (!firstImageUrl.startsWith("http")) {
-                        firstImageUrl = "https://agrofood.deydem.pro/" + firstImageUrl;
-                    }
-
-                    // Chargement de l’image avec Glide
+                // 🔹 Affiche la première image
+                if (!imageUrls.isEmpty()) {
+                    firstImageUrl = imageUrls.get(0);
                     Glide.with(context)
                             .load(firstImageUrl)
                             .diskCacheStrategy(DiskCacheStrategy.ALL)
                             .into(holder.imageView);
-
-                    String finalFirstImageUrl = firstImageUrl;
-                    holder.itemView.setOnClickListener(v -> {
-                        Intent intent = new Intent(context, ProductDetailActivity.class);
-                        intent.putExtra("name", product.getName());
-                        intent.putExtra("price", product.getPrice());
-                        intent.putExtra("telephone", product.getTelephone());
-                        intent.putExtra("image", finalFirstImageUrl);
-                        context.startActivity(intent);
-                    });
                 }
+
+                ArrayList<String> finalImageUrls = new ArrayList<>(imageUrls);
+                holder.itemView.setOnClickListener(v -> {
+                    Intent intent = new Intent(context, ProductDetailActivity.class);
+                    intent.putExtra("name", product.getName());
+                    intent.putExtra("price", product.getPrice());
+                    intent.putExtra("telephone", product.getTelephone());
+                    intent.putExtra("description", product.getDescription());
+                    intent.putStringArrayListExtra("images", finalImageUrls); // 🔹 Toutes les images
+                    context.startActivity(intent);
+                });
 
             } catch (JSONException e) {
                 e.printStackTrace();

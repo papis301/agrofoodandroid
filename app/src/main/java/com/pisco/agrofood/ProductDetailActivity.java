@@ -1,55 +1,48 @@
 package com.pisco.agrofood;
 
 import android.os.Bundle;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Button;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
 
-import com.bumptech.glide.Glide;
+import java.util.ArrayList;
 
 public class ProductDetailActivity extends AppCompatActivity {
 
-    private ImageView imageProduct;
-    private TextView textName, textPrice, textDescription, textTelephone, textFirebase, textDate;
-    private Button btnBack;
+    private ViewPager2 viewPagerImages;
+    private TextView textProductName, textProductPrice, textProductDescription;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
 
-        imageProduct = findViewById(R.id.imageProduct);
-        textName = findViewById(R.id.textName);
-        textPrice = findViewById(R.id.textPrice);
-        textTelephone = findViewById(R.id.textTelephone);
-        textDescription = findViewById(R.id.textDescription);
-        btnBack = findViewById(R.id.btnBack);
+        viewPagerImages = findViewById(R.id.viewPagerImages);
+        textProductName = findViewById(R.id.textProductName);
+        textProductPrice = findViewById(R.id.textProductPrice);
+        textProductDescription = findViewById(R.id.textProductDescription);
 
-        // ✅ Récupération des données passées depuis l’intent
-        String name = getIntent().getStringExtra("name");
+        // ✅ Récupération des données depuis l’intent
+        String productName = getIntent().getStringExtra("name");
+        String productDescription = getIntent().getStringExtra("description");
         double price = getIntent().getDoubleExtra("price", 0.0);
-        String description = getIntent().getStringExtra("description");
-        String telephone = getIntent().getStringExtra("telephone");
-        String imageUrl = getIntent().getStringExtra("image");
+        ArrayList<String> images = getIntent().getStringArrayListExtra("images");
 
-        // ✅ Affichage
-        textName.setText(name);
-        textTelephone.setText("Telephone : "+telephone);
-        textPrice.setText(String.format("%.2f FCFA", price));
-        textDescription.setText(description);
-
-        if (imageUrl != null && !imageUrl.isEmpty()) {
-            Glide.with(this)
-                    .load(imageUrl)
-                    .placeholder(R.drawable.ic_launcher_background)
-                    .into(imageProduct);
-        } else {
-            imageProduct.setImageResource(R.drawable.ic_launcher_background);
+        if (images == null || images.isEmpty()) {
+            images = new ArrayList<>();
+            // Valeur par défaut si aucune image
+            images.add("https://via.placeholder.com/300x300.png?text=Pas+d'image");
         }
 
-        // ✅ Retour
-        btnBack.setOnClickListener(v -> finish());
+        // ✅ Affichage des infos
+        textProductName.setText(productName != null ? productName : "Produit inconnu");
+        textProductDescription.setText(productDescription != null ? productDescription : "Aucune description");
+        textProductPrice.setText(price + " FCFA");
+
+        // ✅ Adapter pour afficher toutes les images dans le ViewPager2
+        ImageSliderAdapter adapter = new ImageSliderAdapter(this, images);
+        viewPagerImages.setAdapter(adapter);
     }
 }

@@ -1,83 +1,35 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#F9F9F9"
-    android:padding="16dp">
+    android:layout_height="match_parent">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPagerImages"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="250dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-        <!-- Image du produit -->
-        <ImageView
-            android:id="@+id/imageProduct"
-            android:layout_width="match_parent"
-            android:layout_height="250dp"
-            android:scaleType="centerCrop"
-            android:background="@color/black"
-            android:contentDescription="Image du produit"
-            android:layout_marginBottom="16dp"
-            android:src="@drawable/ic_launcher_background" />
+    <TextView
+        android:id="@+id/textProductName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:padding="8dp"/>
 
-        <!-- Nom du produit -->
-        <TextView
-            android:id="@+id/textName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Nom du produit"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:textSize="22sp"
-            android:fontFamily="@font/roboto_bold"
-            android:layout_marginBottom="8dp" />
+    <TextView
+        android:id="@+id/textProductPrice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:padding="8dp"/>
 
-        <!-- Prix -->
-        <TextView
-            android:id="@+id/textPrice"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="0 FCFA"
-            android:textColor="#4CAF50"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <!-- Description -->
-        <TextView
-            android:id="@+id/textDescription"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Description du produit ici..."
-            android:textColor="#444"
-            android:textSize="16sp"
-            android:lineSpacingExtra="4dp"
-            android:layout_marginBottom="24dp" />
-
-        <!-- ✅ Téléphone -->
-        <TextView
-            android:id="@+id/textTelephone"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Téléphone : 77 000 00 00"
-            android:textColor="#388E3C"
-            android:textStyle="italic"
-            android:textSize="16sp"
-            android:drawablePadding="8dp"
-            android:layout_marginBottom="24dp" />
-
-        <!-- Bouton Retour -->
-        <Button
-            android:id="@+id/btnBack"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Retour"
-            android:textAllCaps="false"
-            android:textSize="16sp"
-            android:backgroundTint="#4CAF50"
-            android:textColor="@android:color/white"
-            android:fontFamily="@font/roboto_medium" />
-
-    </LinearLayout>
-</ScrollView>
+    <TextView
+        android:id="@+id/textProductDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"/>
+</LinearLayout>
