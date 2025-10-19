@@ -106,6 +106,9 @@ public class HomeTemplate extends BaseActivity {
                 } else if (item.getItemId() == R.id.vendre) {
                     startActivity(new Intent(HomeTemplate.this, HomeActivity.class));
                     return true;
+                } else if (item.getItemId() == R.id.navigation_info) {
+                    startActivity(new Intent(HomeTemplate.this, InfoActivity.class));
+                    return true;
                 }
                 return false;
             }

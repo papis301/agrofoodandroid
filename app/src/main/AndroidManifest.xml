@@ -12,8 +12,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.AgroFood">
+        android:theme="@style/Theme.AgroFood"
+        android:usesCleartextTraffic="true">
+        <activity
+            android:name=".InfoActivity"
+            android:exported="false" />
         <activity
             android:name=".ProductDetailActivity"
             android:exported="false" />
@@ -31,15 +34,13 @@
             android:exported="false" />
         <activity
             android:name=".LoginTemplate"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name=".MesProduitsActivity"
             android:exported="false" />
         <activity
             android:name=".AccueilActivity"
-            android:exported="false">
-
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".ProductListActivity"
             android:exported="false" />

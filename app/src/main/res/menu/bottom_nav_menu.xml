@@ -8,4 +8,9 @@
         android:id="@+id/vendre"
         android:title="Vendre"
         android:icon="@drawable/vendre" />
+
+    <item
+        android:id="@+id/navigation_info"
+        android:icon="@drawable/info"
+        android:title="Info" />
 </menu>

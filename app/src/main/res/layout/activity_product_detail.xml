@@ -27,9 +27,22 @@
         android:textColor="@color/black"
         android:padding="8dp"/>
 
+    <!-- ✅ Téléphone -->
+    <TextView
+        android:id="@+id/textTelephone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Téléphone : "
+        android:textColor="#388E3C"
+        android:textStyle="italic"
+        android:textSize="16sp"
+        android:drawablePadding="8dp"
+        android:layout_marginBottom="24dp" />
+
     <TextView
         android:id="@+id/textProductDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"/>
+
 </LinearLayout>

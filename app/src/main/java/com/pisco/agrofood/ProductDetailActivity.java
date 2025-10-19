@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class ProductDetailActivity extends AppCompatActivity {
 
     private ViewPager2 viewPagerImages;
-    private TextView textProductName, textProductPrice, textProductDescription;
+    private TextView textProductName, textProductPrice, textProductDescription, textTelephone;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -23,9 +23,11 @@ public class ProductDetailActivity extends AppCompatActivity {
         textProductName = findViewById(R.id.textProductName);
         textProductPrice = findViewById(R.id.textProductPrice);
         textProductDescription = findViewById(R.id.textProductDescription);
+        textTelephone = findViewById(R.id.textTelephone);
 
         // ✅ Récupération des données depuis l’intent
         String productName = getIntent().getStringExtra("name");
+        String telephone = getIntent().getStringExtra("telephone");
         String productDescription = getIntent().getStringExtra("description");
         double price = getIntent().getDoubleExtra("price", 0.0);
         ArrayList<String> images = getIntent().getStringArrayListExtra("images");
@@ -38,8 +40,9 @@ public class ProductDetailActivity extends AppCompatActivity {
 
         // ✅ Affichage des infos
         textProductName.setText(productName != null ? productName : "Produit inconnu");
-        textProductDescription.setText(productDescription != null ? productDescription : "Aucune description");
+        //textProductDescription.setText(productDescription != null ? productDescription : "Aucune description");
         textProductPrice.setText(price + " FCFA");
+        textTelephone.setText("Telephone : "+telephone);
 
         // ✅ Adapter pour afficher toutes les images dans le ViewPager2
         ImageSliderAdapter adapter = new ImageSliderAdapter(this, images);
